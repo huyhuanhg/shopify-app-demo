@@ -13,6 +13,7 @@ use Shopify\Context;
 use Shopify\Utils;
 use Shopify\Webhooks\Registry;
 use Shopify\Webhooks\Topics;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,9 @@ use Shopify\Webhooks\Topics;
 */
 
 Route::fallback(function (Request $request) {
+    if ($request->is('api/*')) {
+        throw new NotFoundHttpException("Page Not Found!");
+    }
     $shop = Utils::sanitizeShopDomain($request->query('shop'));
     $host = $request->query('host');
     $appInstalled = Session::where('shop', $shop)->exists();
