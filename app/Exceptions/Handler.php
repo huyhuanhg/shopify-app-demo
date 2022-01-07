@@ -35,7 +35,7 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->renderable(function (\Exception $e, $request) {
-            if ($request->is('api*')) {
+            if ($request->is('api/*') || $request->ajax() || $request->wantsJson()) {
                 return response()->json(
                     [
                         'status' => 'false',
