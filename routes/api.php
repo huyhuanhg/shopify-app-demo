@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Shopify\Clients\Rest;
@@ -50,12 +51,20 @@ Route::get('/get', function () {
     }
 });
 
-//Route::post('/product/{id}/request', function (Request $request, $id) {
-//    return response()->json([
-//        'product_id' => $id,
-//        'icon_id' => $request->iconId
-//    ]);
-//});
+Route::post('/product/{product}', function ($product, Request $request) {
+    try {
+        $p_static = Product::find($product);
+        return response()->json([
+            'product_id' => $product,
+            'icon_id' => $request->icon_id,
+            'product_static' => $p_static,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'msg' => $e->getMessage()
+        ]);
+    }
+});
 
 Route::resource('/test-method', 'App\Http\Controllers\TestController')->except(['create', 'show', 'edit']);
 
