@@ -14,6 +14,8 @@ class AddOnlineAccessInfoToSessions extends Migration
     public function up()
     {
         Schema::table('sessions', function (Blueprint $table) {
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_general_ci';
             $table->integer('user_id')->nullable();
             $table->string('user_first_name')->nullable();
             $table->string('user_last_name')->nullable();

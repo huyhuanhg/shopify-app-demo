@@ -50,15 +50,17 @@ Route::get('/get', function () {
     }
 });
 
-Route::post('/product/{id}/request', function (Request $request, $id) {
-    return response()->json([
-        'product_id' => $id,
-        'icon_id' => $request->iconId
-    ]);
-});
+//Route::post('/product/{id}/request', function (Request $request, $id) {
+//    return response()->json([
+//        'product_id' => $id,
+//        'icon_id' => $request->iconId
+//    ]);
+//});
 
 Route::resource('/test-method', 'App\Http\Controllers\TestController')->except(['create', 'show', 'edit']);
 
+Route::resource('/product/{product_id}/request', 'App\Http\Controllers\ProductRequestController')
+    ->except(['create', 'edit']);
 
 Route::fallback(function () {
     return response()->json([

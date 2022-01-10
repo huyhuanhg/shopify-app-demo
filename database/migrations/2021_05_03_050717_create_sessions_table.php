@@ -14,6 +14,8 @@ class CreateSessionsTable extends Migration
     public function up()
     {
         Schema::create('sessions', function (Blueprint $table) {
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_general_ci';
             $table->id();
             $table->string('session_id')->nullable(false)->unique();
             $table->string('shop')->nullable(false);
