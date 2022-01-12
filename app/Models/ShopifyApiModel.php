@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 class ShopifyApiModel extends Model
 {
 
+    protected $id;
+
     protected $methodList = [
         'get',
         'post',
@@ -24,13 +26,13 @@ class ShopifyApiModel extends Model
      */
     public static function __callStatic($method, $parameters)
     {
-//        if (in_array())
+        //        if (in_array())
         $called = get_called_class();
         $class = new $called();
         return $class->$method(...$parameters);
-//        return (new static)->$method(...$parameters);
+        //        return (new static)->$method(...$parameters);
 
-//        return parent::$method;
+        //        return parent::$method;
     }
 
     /**
@@ -52,7 +54,27 @@ class ShopifyApiModel extends Model
     protected function find($id)
     {
         return $this->callShopifyApi('get', $id);
-//        return $this->newInstance($res, true);
+        //        return $this->newInstance($res, true);
+    }
+
+    protected function findOrFail($id)
+    {
+        return $this->callShopifyApi('get', $id);
+    }
+
+    protected function insert($data)
+    {
+        return $this->callShopifyApi('post', null, $data);
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        return $this->callShopifyApi('put', null, $attributes);
+    }
+
+    public static function destroy($id)
+    {
+        return (new static)->callShopifyApi('delete', $id);
     }
 
     /**
@@ -63,11 +85,8 @@ class ShopifyApiModel extends Model
      * @return void
      * @throws MissingArgumentException
      */
-    protected function callShopifyApi($method, $id = null, $data = null, array $params = [])
+    protected function callShopifyApi(string $method = 'get', $id = null, $data = null, array $params = [])
     {
-        if (!isset($method)) {
-            $method = \Request::method();
-        }
         $method = strtolower($method);
         if (!in_array($method, $this->methodList)) {
             return;
@@ -76,7 +95,7 @@ class ShopifyApiModel extends Model
         array_walk($params, function (&$paramValue, $paramKey) {
             $paramValue = "$paramKey=$paramValue";
         });
-        $query = implode('&', $params); // ?
+        $query = implode('&', $params);
 
         $path = "$this->table/$id";
         $client = new Rest(env('SHOP'), env('ACCESS_TOKEN'));
