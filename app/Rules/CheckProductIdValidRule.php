@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Product;
 use Illuminate\Contracts\Validation\Rule;
 use Shopify\Clients\Rest;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,11 +29,12 @@ class CheckProductIdValidRule implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        $client = new Rest(env('SHOP'), env('ACCESS_TOKEN'));
-        $res = $client->get(
-            "products/$value"
-        );
-        return $res->getStatusCode() === Response::HTTP_OK;
+        // $client = new Rest(env('SHOP'), env('ACCESS_TOKEN'));
+        // $res = $client->get(
+        //     "products/$value"
+        // );
+        // return $res->getStatusCode() === Response::HTTP_OK;
+        return Product::findOrFail($value);
     }
 
     /**
