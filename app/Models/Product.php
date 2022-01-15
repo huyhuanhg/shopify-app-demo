@@ -11,7 +11,7 @@ class Product extends ShopifyApiModel
 
     protected $table = 'products';
     protected $fillable = [
-        'value'
+        'id'
     ];
 
     /**
@@ -23,6 +23,6 @@ class Product extends ShopifyApiModel
      */
     public function resolveRouteBinding($value, $field = null): ?Model
     {
-        return $this->newInstance(['value' => $value], true);
+        return $this->newInstance(['id' => $value], true);
     }
 }

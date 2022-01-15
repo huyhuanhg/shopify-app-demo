@@ -1,35 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class TestMethodController extends Controller
 {
-    public function index(Request $request)
+    protected $method;
+    public function __construct(Request $request)
     {
-        return response()->json([
-            'method' => $request->method()
-        ]);
+        $this->method = $request->method();
     }
-    public function store(Request $request)
+
+    public function __call($method, $parameters)
     {
         return response()->json([
-            'method' => $request->method()
-        ]);
-    }
-    public function update(Request $request, $id)
-    {
-        return response()->json([
-            'method' => $request->method(),
-            'product_id' => $id
-        ]);
-    }
-    public function destroy(Request $request, $id)
-    {
-        return response()->json([
-            'method' => $request->method(),
-            'product_id' => $id
+            'method' => $this->method
         ]);
     }
 }

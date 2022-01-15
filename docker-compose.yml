@@ -1,0 +1,65 @@
+version: '3'
+services:
+
+    #PHP Service
+    app_allu:
+        build:
+            context: .
+            dockerfile: ./setup/php-fpm/Dockerfile
+        image: digitalocean.com/php
+        container_name: app_allu
+        restart: unless-stopped
+        tty: true
+        environment:
+            SERVICE_NAME: app
+            SERVICE_TAGS: dev
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - ./setup/php-fpm/ini/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - app-network
+
+    #Nginx Service
+    web_allu:
+        image: nginx:alpine
+        container_name: web_allu
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./:/var/www
+            - ./setup/nginx/conf.d/:/etc/nginx/conf.d/
+            - ./setup/certs/:/var/www/setup/certs/
+        networks:
+            - app-network
+
+    #MySQL Service
+    db_allu:
+        image: mysql:5.7.22
+        container_name: db_allu
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: allu
+            MYSQL_ROOT_PASSWORD: allu123
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - ./setup/mysql/dbdata:/var/lib/mysql/
+            - ./setup/mysql/my.cnf:/etc/mysql/my.cnf
+        networks:
+            - app-network
+
+#Docker Networks
+networks:
+    app-network:
+        driver: bridge
+#Volumes
+volumes:
+    dbdata:
+        driver: local
