@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ShopifyApiModel extends Model
 {
 
+    //TODO
     protected $id;
 
     protected $methodList = [
